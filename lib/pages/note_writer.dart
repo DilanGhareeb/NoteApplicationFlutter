@@ -1,16 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notes_app/provider/note_text_notifier.dart';
+import 'package:notes_app/provider/title_notifier.dart';
 
-class NoteWriter extends StatefulWidget {
+class NoteWriter extends ConsumerStatefulWidget {
   final String actionTitle;
   const NoteWriter({super.key, required this.actionTitle});
 
   @override
-  State<NoteWriter> createState() => _NoteWriterState();
+  ConsumerState<NoteWriter> createState() => _NoteWriterState();
 }
 
-class _NoteWriterState extends State<NoteWriter> {
+class _NoteWriterState extends ConsumerState<NoteWriter> {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController noteTextController = TextEditingController();
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    noteTextController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final titleNotifier = ref.watch(titleNotifierProvider.notifier);
+    final noteTextNotifier = ref.watch(noteTextNotifierProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.actionTitle),
@@ -22,12 +37,14 @@ class _NoteWriterState extends State<NoteWriter> {
             Padding(
               padding: const EdgeInsets.only(top: 25.0),
               child: TextField(
+                controller: titleController,
                 decoration: inputDecorationForNote("Title"),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 25.0),
               child: TextField(
+                controller: noteTextController,
                 decoration: inputDecorationForNote("Note Text"),
                 keyboardType: TextInputType.multiline,
                 maxLines:
@@ -40,7 +57,9 @@ class _NoteWriterState extends State<NoteWriter> {
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(15),
                       backgroundColor: const Color.fromARGB(255, 174, 12, 0),
@@ -53,7 +72,11 @@ class _NoteWriterState extends State<NoteWriter> {
                 const SizedBox(width: 25),
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      titleNotifier.addTitle(titleController.text);
+                      noteTextNotifier.addNote(noteTextController.text);
+                      Navigator.of(context).pop();
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(15),
                       minimumSize: const Size(double.infinity, 25),

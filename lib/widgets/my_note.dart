@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class MyNote extends StatelessWidget {
   final String title;
   final String noteText;
+  final int indexOfNote;
 
   const MyNote({
     super.key,
     required this.title,
     required this.noteText,
+    required this.indexOfNote,
   });
 
   @override
