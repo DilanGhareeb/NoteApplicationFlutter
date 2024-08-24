@@ -20,6 +20,7 @@ class MyNote extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final titleProvider = ref.read(titleNotifierProvider.notifier);
     final noteTextProvider = ref.read(noteTextNotifierProvider.notifier);
+
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: ListTile(
@@ -33,7 +34,12 @@ class MyNote extends ConsumerWidget {
             ),
           ),
         ),
-        subtitle: Text(noteText),
+        subtitle: Text(
+          noteText,
+          style: TextStyle(
+            height: 1.5, // Adjust the line spacing here
+          ),
+        ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

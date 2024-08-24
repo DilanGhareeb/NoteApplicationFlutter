@@ -5,24 +5,32 @@ import 'package:notes_app/provider/title_notifier.dart';
 
 class NoteWriter extends ConsumerStatefulWidget {
   final String actionTitle;
-  String? title;
-  String? noteText;
-  int? indexOfNote;
+  final String? title;
+  final String? noteText;
+  final int? indexOfNote;
 
-  NoteWriter(
-      {super.key,
-      required this.actionTitle,
-      this.title,
-      this.indexOfNote,
-      this.noteText});
+  const NoteWriter({
+    super.key,
+    required this.actionTitle,
+    this.title,
+    this.indexOfNote,
+    this.noteText,
+  });
 
   @override
   ConsumerState<NoteWriter> createState() => _NoteWriterState();
 }
 
 class _NoteWriterState extends ConsumerState<NoteWriter> {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController noteTextController = TextEditingController();
+  late TextEditingController titleController;
+  late TextEditingController noteTextController;
+
+  @override
+  void initState() {
+    super.initState();
+    titleController = TextEditingController(text: widget.title ?? "");
+    noteTextController = TextEditingController(text: widget.noteText ?? "");
+  }
 
   @override
   void dispose() {
@@ -33,16 +41,15 @@ class _NoteWriterState extends ConsumerState<NoteWriter> {
 
   @override
   Widget build(BuildContext context) {
-    final titleNotifier = ref.watch(titleNotifierProvider.notifier);
-    final noteTextNotifier = ref.watch(noteTextNotifierProvider.notifier);
-    titleController.text = widget.title == null ? "" : widget.title!;
-    noteTextController.text = widget.noteText == null ? "" : widget.noteText!;
+    final titleNotifier = ref.read(titleNotifierProvider.notifier);
+    final noteTextNotifier = ref.read(noteTextNotifierProvider.notifier);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.actionTitle),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
+        padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
             Padding(
@@ -58,8 +65,7 @@ class _NoteWriterState extends ConsumerState<NoteWriter> {
                 controller: noteTextController,
                 decoration: inputDecorationForNote("Note Text"),
                 keyboardType: TextInputType.multiline,
-                maxLines:
-                    null, // This allows the TextField to grow with the content
+                maxLines: null, // Allows the TextField to grow with the content
                 minLines: 5, // Minimum lines to display initially
               ),
             ),
@@ -84,15 +90,35 @@ class _NoteWriterState extends ConsumerState<NoteWriter> {
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      if (widget.title == "Add a New Note") {
+                      if (titleController.text.isEmpty ||
+                          noteTextController.text.isEmpty) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text("Unsuccessful"),
+                            content:
+                                const Text("You cannot leave any field empty."),
+                            actions: [
+                              ElevatedButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text("Close"),
+                              ),
+                            ],
+                          ),
+                        );
+                        return;
+                      }
+
+                      if (widget.actionTitle == "Add a New Note") {
                         titleNotifier.addTitle(titleController.text);
                         noteTextNotifier.addNote(noteTextController.text);
-                      } else {
+                      } else if (widget.indexOfNote != null) {
                         titleNotifier.updateTitle(
                             widget.indexOfNote!, titleController.text);
                         noteTextNotifier.updateNote(
                             widget.indexOfNote!, noteTextController.text);
                       }
+
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
@@ -104,7 +130,7 @@ class _NoteWriterState extends ConsumerState<NoteWriter> {
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -117,7 +143,8 @@ class _NoteWriterState extends ConsumerState<NoteWriter> {
       contentPadding: const EdgeInsets.all(20),
       labelText: hintText,
       border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15))),
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+      ),
     );
   }
 }
