@@ -1,4 +1,4 @@
-# notes_app
+# Notes Application Flutter
 A Flutter-based note-taking application utilizing Riverpod for state management and SharedPreferences for data storage. The app supports note creation, editing, and viewing, with dark and light mode support. Created as part of my learning journey in mobile app development.
 
 ## Features
