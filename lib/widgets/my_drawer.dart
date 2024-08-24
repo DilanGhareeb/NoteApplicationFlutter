@@ -61,7 +61,7 @@ class _MyDrawerState extends ConsumerState<MyDrawer> {
                 const Spacer(),
                 CupertinoSwitch(
                   activeColor: Theme.of(context).colorScheme.primary,
-                  value: !themeNotifier.isLightTheme,
+                  value: themeNotifier.isDarkMode ?? false,
                   onChanged: (bool value) {
                     themeNotifier.toggleTheme();
                   },
