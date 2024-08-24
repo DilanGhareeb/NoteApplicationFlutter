@@ -1,18 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notes_app/provider/theme_notifier.dart';
 
-class MyDrawer extends StatefulWidget {
+class MyDrawer extends ConsumerStatefulWidget {
   const MyDrawer({super.key});
 
   @override
-  State createState() => _MyDrawerState();
+  ConsumerState createState() => _MyDrawerState();
 }
 
-class _MyDrawerState extends State<MyDrawer> {
+class _MyDrawerState extends ConsumerState<MyDrawer> {
   bool isDarkMode = false;
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = ref.watch(themeNotifierProvider.notifier);
     return Drawer(
       child: Column(
         children: [
@@ -49,16 +52,18 @@ class _MyDrawerState extends State<MyDrawer> {
             padding: const EdgeInsets.all(18.0),
             child: Row(
               children: [
-                const Text("Dark Mode"),
+                const Icon(Icons.dark_mode),
+                const SizedBox(width: 5),
+                const Text(
+                  "Dark Mode",
+                  style: TextStyle(fontSize: 16),
+                ),
                 const Spacer(),
                 CupertinoSwitch(
                   activeColor: Theme.of(context).colorScheme.primary,
-                  value: isDarkMode,
+                  value: !themeNotifier.isLightTheme,
                   onChanged: (bool value) {
-                    setState(() {
-                      isDarkMode = value;
-                      // Handle the theme change here, e.g., update app theme
-                    });
+                    themeNotifier.toggleTheme();
                   },
                 ),
               ],

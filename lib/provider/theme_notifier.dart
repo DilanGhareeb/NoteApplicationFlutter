@@ -13,8 +13,8 @@ class ThemeNotifier extends _$ThemeNotifier {
 
   void toggleTheme() {
     // Toggle between light and dark themes
-    state = _isLightTheme ? darkTheme : lightTheme;
+    state = state == lightTheme ? darkTheme : lightTheme;
   }
 
-  bool get _isLightTheme => state == lightTheme;
+  bool get isLightTheme => state == lightTheme;
 }
