@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/widgets/my_drawer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,7 +15,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text("Note Application"),
       ),
-      drawer: Drawer(),
+      drawer: MyDrawer(),
       body: Center(
         child: Text("Notes should be here"),
       ),
