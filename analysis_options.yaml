@@ -1,0 +1,29 @@
+analyzer:
+  plugins:
+    - custom_lint
+
+# This file configures the Dart analyzer, which performs static code analysis
+# to identify errors, warnings, and lints.
+#
+# Issues found by the analyzer are shown in Dart-enabled IDEs
+# (https://dart.dev/tools#ides-and-editors) and can also be checked via
+# the command line using `flutter analyze`.
+
+# The following line includes a set of recommended lints for Flutter apps,
+# packages, and plugins to promote good coding practices.
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  # You can customize the lint rules applied to this project in the section below.
+  # This can include disabling rules from the `package:flutter_lints/flutter.yaml`
+  # included above or adding additional rules. A full list of available lints and
+  # their documentation can be found at https://dart.dev/lints.
+  #
+  # To disable a lint rule for the entire project, modify the section below.
+  # Alternatively, you can suppress a rule for a specific line of code or file
+  # by using `// ignore: name_of_lint` or `// ignore_for_file: name_of_lint`.
+  rules:
+    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
+    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+# For more details about this file, visit
+# https://dart.dev/guides/language/analysis-options
