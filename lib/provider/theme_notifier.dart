@@ -7,19 +7,19 @@ part 'theme_notifier.g.dart';
 
 @riverpod
 class ThemeNotifier extends _$ThemeNotifier {
-  late bool isDarkMode;
+  late bool? isDarkMode;
 
   @override
   ThemeData build() {
     // Default initialization, fetchThemeMode will update this
     fetchThemeMode();
-    return isDarkMode ? darkTheme : lightTheme;
+    return isDarkMode ?? false ? darkTheme : lightTheme;
   }
 
   Future<void> toggleTheme() async {
-    isDarkMode = !isDarkMode; // Toggle the isDarkMode flag
-    await SharedPreferencesAsync().setBool("isDarkMode", isDarkMode);
-    state = isDarkMode
+    isDarkMode = !isDarkMode!; // Toggle the isDarkMode flag
+    await SharedPreferencesAsync().setBool("isDarkMode", isDarkMode!);
+    state = isDarkMode ?? false
         ? darkTheme
         : lightTheme; // Update the state with the new theme
   }
@@ -27,7 +27,7 @@ class ThemeNotifier extends _$ThemeNotifier {
   Future<void> fetchThemeMode() async {
     isDarkMode = await SharedPreferencesAsync().getBool("isDarkMode") ??
         false; // Provide a default value if not found
-    state = isDarkMode
+    state = isDarkMode ?? false
         ? darkTheme
         : lightTheme; // Update the state to reflect the fetched value
   }

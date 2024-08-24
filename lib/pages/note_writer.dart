@@ -5,7 +5,16 @@ import 'package:notes_app/provider/title_notifier.dart';
 
 class NoteWriter extends ConsumerStatefulWidget {
   final String actionTitle;
-  const NoteWriter({super.key, required this.actionTitle});
+  String? title;
+  String? noteText;
+  int? indexOfNote;
+
+  NoteWriter(
+      {super.key,
+      required this.actionTitle,
+      this.title,
+      this.indexOfNote,
+      this.noteText});
 
   @override
   ConsumerState<NoteWriter> createState() => _NoteWriterState();
@@ -26,6 +35,8 @@ class _NoteWriterState extends ConsumerState<NoteWriter> {
   Widget build(BuildContext context) {
     final titleNotifier = ref.watch(titleNotifierProvider.notifier);
     final noteTextNotifier = ref.watch(noteTextNotifierProvider.notifier);
+    titleController.text = widget.title == null ? "" : widget.title!;
+    noteTextController.text = widget.noteText == null ? "" : widget.noteText!;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.actionTitle),
@@ -73,8 +84,15 @@ class _NoteWriterState extends ConsumerState<NoteWriter> {
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      titleNotifier.addTitle(titleController.text);
-                      noteTextNotifier.addNote(noteTextController.text);
+                      if (widget.title == "Add a New Note") {
+                        titleNotifier.addTitle(titleController.text);
+                        noteTextNotifier.addNote(noteTextController.text);
+                      } else {
+                        titleNotifier.updateTitle(
+                            widget.indexOfNote!, titleController.text);
+                        noteTextNotifier.updateNote(
+                            widget.indexOfNote!, noteTextController.text);
+                      }
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(

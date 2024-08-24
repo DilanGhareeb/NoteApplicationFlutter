@@ -38,8 +38,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) =>
-                  const NoteWriter(actionTitle: "Add a New Note")));
+              builder: (context) => NoteWriter(actionTitle: "Add a New Note")));
         },
         child: const Icon(
           Icons.add_rounded,
